@@ -1,0 +1,63 @@
+
+
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+    <xacro:macro name="robot_arm" params="base_height link1_length link2_length">
+
+        <!-- Vertical support rail -->
+        <link name="vertical_rail">
+            <visual>
+                <geometry>
+                    <box size="0.06 0.06 ${link1_length}"/>
+                </geometry>
+                <origin xyz="0 0 ${link1_length/2}" rpy="0 0 0"/>
+                <material name="silver">
+                    <color rgba="0.7 0.7 0.7 1"/>
+                </material>
+            </visual>
+        </link>
+
+        <!-- Vertical sliding carriage -->
+        <link name="lift_link">
+            <visual>
+                <geometry>
+                    <box size="0.10 0.10 0.10"/>
+                </geometry>
+                <material name="blue">
+                    <color rgba="0.1 0.3 0.8 1"/>
+                </material>
+            </visual>
+        </link>
+
+        <joint name="vertical_joint" type="prismatic">
+    <parent link="vertical_rail"/>
+    <child link="lift_link"/>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+    <axis xyz="0 0 1"/>
+    <limit lower="${link1_length/4}" upper="${link1_length}" effort="100" velocity="0.2"/>
+</joint>
+
+        <!-- Horizontal arm -->
+        <link name="horizontal_arm">
+            <visual>
+                <geometry>
+                    <box size="${link2_length} 0.05 0.05"/>
+                </geometry>
+                <origin xyz="${link2_length/2} 0 0" rpy="0 0 0"/>
+                <material name="dark_grey">
+                    <color rgba="0.3 0.3 0.3 1"/>
+                </material>
+            </visual>
+        </link>
+
+        <joint name="horizontal_joint" type="prismatic">
+            <parent link="lift_link"/>
+            <child link="horizontal_arm"/>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <axis xyz="1 0 0"/>
+            <limit lower="0" upper="${link2_length}" effort="100" velocity="0.2"/>
+        </joint>
+
+    </xacro:macro>
+
+</robot>
